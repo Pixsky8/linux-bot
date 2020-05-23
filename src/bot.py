@@ -16,7 +16,7 @@ client = discord.Client()
 config = config.Config()
 token = config.token
 
-# security measure
+# allow users to write to /data
 if command.is_docker:
     os.system("chmod -R a+rwxs /data/")
 

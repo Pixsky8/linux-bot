@@ -7,7 +7,7 @@ is_docker = True
 
 async def on_command(message, client):
     content = message.content[1:]
-    os.system("echo " + message.author.name+ ": " + content)
+    os.system("echo \"" + message.author.name+ ": " + content + '\"')
     if content.startswith("cd"):
         if len(content) > 3:
             current_dir = content[3:]
@@ -15,9 +15,14 @@ async def on_command(message, client):
             current_dir = "~/"
         os.chdir(current_dir)
         await message.channel.send("pwd: " + os.popen("pwd").read())
+
     else:
         if is_docker:
-            out = os.popen("su quarantedeux -c \"" + content + '\"').read()
+            proc = subprocess.Popen("su quarantedeux -c \"" + content + '\"', stdout=subprocess.PIPE, shell=True)
+            (out, err) = proc.communicate()
         else:
-            out = os.popen(content).read()
-        await message.channel.send(out)
+            proc = subprocess.Popen(content, stdout=subprocess.PIPE, shell=True)
+            (out, err) = proc.communicate()
+        if err:
+            await message.channel.send("Error: " + err.decode("utf-8"))
+        await message.channel.send(out.decode("utf-8"))
