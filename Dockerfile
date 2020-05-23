@@ -1,7 +1,9 @@
 FROM debian:buster
 # install python
 RUN apt update &&\
-    apt install python3.7 python3-pip -y
+    apt install -y python3.7 python3-pip\
+        neofetch toilet\
+        libcaca0 caca-utils
 
 # add python scripts
 ADD . /app/
@@ -17,7 +19,6 @@ RUN useradd -u 4242 quarantedeux
 
 # store /data
 VOLUME [ "/data" ]
-
 
 # on server start
 CMD python3.7 src/bot.py

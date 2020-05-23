@@ -2,8 +2,10 @@ import os
 import discord
 import subprocess
 
-current_dir = "/data"
 is_docker = True
+
+current_dir = "/data"
+max_message = 2
 
 async def on_command(message, client):
     markdown = "Markdown"
@@ -45,7 +47,8 @@ async def on_command(message, client):
             return_code = proc.returncode
         reply = out.decode("utf-8")
 
-    reply_command(message, reply, markdown, return_code)
+
+    await reply_command(message, reply, markdown, return_code)
 
 
 def command_arg(command, args, suffix = None):
@@ -62,14 +65,26 @@ def command_arg(command, args, suffix = None):
         res = res + suffix
     return res
 
-def reply_command(message, reply, markdown, return_code):
-
+async def reply_command(message, reply, markdown, return_code, instance=0):
     # reply to the user
     if return_code == 0:
         if reply:
-            await message.channel.send("```" + markdown + "\n" + reply + "\n```")
+            max_size = 1991 - len(markdown)
+            if len(reply) < max_size:
+                await message.channel.send("```" + markdown + "\n" + reply + "\n```")
+            # split message
+            else:
+                i = 0
+                while len(reply) > max_size:
+                    if i >= max_message:
+                        await message.channel.send("```diff\n- Message is too long (" + len(reply) + " chars left)```")
+                        return
+                    await message.channel.send("```" + markdown + "\n" + reply[:max_size] + "\n```")
+                    reply = reply[max_size:]
+                    i += 1
         else:
             await message.channel.send("```(Empty)\n```")
+
     else:
         to_send = "```diff\n"
         lines = reply.splitlines(True)
