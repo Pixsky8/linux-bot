@@ -19,6 +19,7 @@ token = config.token
 # allow users to write to /data
 if command.is_docker:
     os.system("chmod -R a+rwxs /data/")
+    os.chdir("/data")
 
 @client.event
 async def on_ready():
