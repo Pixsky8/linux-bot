@@ -3,7 +3,10 @@ FROM debian:buster
 RUN apt update &&\
     apt install -y python3.7 python3-pip\
         neofetch toilet\
-        libcaca0 caca-utils
+        libcaca0 caca-utils libcaca-dev\
+        wget curl git ssh\
+        gcc gdb valgrind make cmake\
+        ocaml opam m4 bubblewrap
 
 # add python scripts
 ADD . /app/
