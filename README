@@ -1,3 +1,9 @@
-Use install.sh to install the docker and start.sh to run the bot
+Use install.sh to install the docker and run the bot
+Use start.sh to run the bot
 
 The discord bot token must be set before installing the container in config/settings.json
+
+TODO:
+    - Channel based chdir
+    - discord user based permission (sudoer)
+    - ...

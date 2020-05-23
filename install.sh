@@ -1,5 +1,5 @@
 #!/bin/sh
 
-mkdir data
+mkdir -p data/home
 docker build -t linux-bot .
 sh start.sh

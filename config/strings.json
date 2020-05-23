@@ -1,0 +1,4 @@
+{
+    "HELP_MSG": "List of config commands:\n{0.prefix}{0.prefix}prefix <prefix>",
+    "HELP_PREFIX": "usage : {0.prefix}{0.prefix}prefix <new_prefix>"
+}

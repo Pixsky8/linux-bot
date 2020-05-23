@@ -1,20 +1,24 @@
 import os
 import discord
 import subprocess
+from config import config_command
 
 is_docker = True
 
 current_dir = "/data"
 max_message = 2
 
-async def on_command(message, client):
+async def on_command(message, client, config):
     markdown = "Markdown"
     reply = ""
     return_code = 0
-    content = message.content[1:]
-    os.system("echo \"" + message.author.name+ ": " + content + '\"')
+    content = message.content[config.prefix_len:]
+    os.system("echo \"" + message.author.name+ ": " + content.split()[0] + '\"')
 
-    if content.startswith("cd"):
+    if content.startswith(config.prefix):
+        (reply, markdown, return_code) = config_command(content[config.prefix_len:], config)
+
+    elif content.startswith("cd"):
         if len(content) > 3:
             current_dir = content[3:]
         else:
@@ -25,7 +29,7 @@ async def on_command(message, client):
     elif content.startswith("ls"):
         args = content.split()[1:]
         if is_docker :
-            command = command_arg("su quarantedeux -c \"ls -CF", args, "\"")
+            command = command_arg("su quarantedeux -c \"ls -CF ", args, "\"")
             proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
             (out, err) = proc.communicate()
             return_code = proc.returncode

@@ -14,7 +14,6 @@ else:
 
 client = discord.Client()
 config = config.Config()
-token = config.token
 
 # allow users to write to /data
 if command.is_docker:
@@ -32,6 +31,6 @@ async def on_ready():
 async def on_message(message):
     if message.author != client.user:
         if message.content.startswith(config.prefix):
-            await command.on_command(message, client)
+            await command.on_command(message, client, config)
 
-client.run(token)
+client.run(config.token)
