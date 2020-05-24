@@ -1,4 +1,6 @@
 {
-    "HELP_MSG": "List of config commands:\n{0.prefix}{0.prefix}prefix <prefix>",
-    "HELP_PREFIX": "usage : {0.prefix}{0.prefix}prefix <new_prefix>"
+    "HELP_MSG": "List of config commands:\n{0.prefix}{0.prefix}prefix <new_prefix>\n{0.prefix}{0.prefix}addadmin <new_admin>",
+    "HELP_PREFIX": "usage : {0.prefix}{0.prefix}prefix <new_prefix>",
+    "HELP_ADDADMIN": "usage : {0.prefix}{0.prefix}addadmin <new_admin> ...",
+    "NOT_SUDOER": "{0.name} is not a sudoer."
 }

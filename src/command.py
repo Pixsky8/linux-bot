@@ -13,10 +13,21 @@ async def on_command(message, client, config):
     reply = ""
     return_code = 0
     content = message.content[config.prefix_len:]
-    os.system("echo \"" + message.author.name+ ": " + content.split()[0] + '\"')
+    print(message.author.name+ ": " + content)
 
     if content.startswith(config.prefix):
-        (reply, markdown, return_code) = config_command(content[config.prefix_len:], config)
+        (reply, markdown, return_code) = config_command(message, config, message.author)
+
+    elif content.startswith("sudo"):
+        if config.is_admin(message.author.id):
+            command = command_arg("", content.split()[1:], "")
+            proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+            (out, err) = proc.communicate()
+            return_code = proc.returncode
+            reply = out.decode("utf-8")
+        else:
+            reply = config.strings["NOT_SUDOER"].format(message.author)
+            return_code = 1
 
     elif content.startswith("cd"):
         if len(content) > 3:
@@ -43,11 +54,19 @@ async def on_command(message, client, config):
     else:
         if is_docker:
             proc = subprocess.Popen("su quarantedeux -c \"" + content + '\"', stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
-            (out, err) = proc.communicate()
+            try:
+                (out, err) = proc.communicate(timeout=40)
+            except TimeoutExpired:
+                proc.kill()
+                (out, err) = proc.communicate()
             return_code = proc.returncode
         else:
             proc = subprocess.Popen(content, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
-            (out, err) = proc.communicate()
+            try:
+                (out, err) = proc.communicate(timeout=40)
+            except TimeoutExpired:
+                proc.kill()
+                (out, err) = proc.communicate()
             return_code = proc.returncode
         reply = out.decode("utf-8")
 

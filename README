@@ -5,5 +5,4 @@ The discord bot token must be set before installing the container in config/sett
 
 TODO:
     - Channel based chdir
-    - discord user based permission (sudoer)
     - ...
